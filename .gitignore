@@ -1,0 +1,18 @@
+# Dependencias (se reinstalan con npm install)
+node_modules/
+
+# Variables de entorno con contraseñas: NUNCA se suben
+.env
+.env.*
+!.env.example
+
+# Archivos generados por Angular
+dist/
+.angular/
+
+# Registros
+*.log
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
