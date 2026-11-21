@@ -1,0 +1,64 @@
+<a routerLink="/publicaciones" class="volver">← Volver a publicaciones</a>
+
+<h1>{{ idEditar() ? 'Editar publicación' : 'Publicar un artículo' }}</h1>
+
+<form class="tarjeta formulario" [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+  <label>
+    Título *
+    <input type="text" formControlName="titulo" placeholder="Ej: Libro de Cálculo I" />
+  </label>
+  @if (invalido('titulo')) {
+    <small class="campo-error">El título es obligatorio y debe tener entre 3 y 150 caracteres.</small>
+  }
+
+  <label>
+    Descripción *
+    <textarea formControlName="descripcion" rows="4" placeholder="Estado, detalles, qué buscas a cambio..."></textarea>
+  </label>
+  @if (invalido('descripcion')) {
+    <small class="campo-error">La descripción es obligatoria y debe tener entre 10 y 2000 caracteres.</small>
+  }
+
+  <div class="fila">
+    <label>
+      Categoría *
+      <select formControlName="categoria">
+        <option value="" disabled>Selecciona...</option>
+        @for (c of categorias; track c.valor) {
+          <option [value]="c.valor">{{ c.texto }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Modalidad *
+      <select formControlName="modalidad">
+        <option value="" disabled>Selecciona...</option>
+        @for (m of modalidades; track m.valor) {
+          <option [value]="m.valor">{{ m.texto }}</option>
+        }
+      </select>
+    </label>
+  </div>
+  @if (invalido('categoria') || invalido('modalidad')) {
+    <small class="campo-error">Selecciona una categoría y una modalidad.</small>
+  }
+
+  @if (!idEditar()) {
+    <label>
+      ID de usuario (temporal, hasta implementar el login)
+      <input type="number" formControlName="usuarioId" min="1" />
+    </label>
+    @if (invalido('usuarioId')) {
+      <small class="campo-error">Ingresa un ID de usuario válido.</small>
+    }
+  }
+
+  @if (error()) {
+    <p class="alerta error">{{ error() }}</p>
+  }
+
+  <button type="submit" class="boton" [disabled]="enviando()">
+    {{ enviando() ? 'Guardando...' : idEditar() ? 'Guardar cambios' : 'Publicar' }}
+  </button>
+</form>

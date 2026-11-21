@@ -1,1 +1,136 @@
-/* You can add global styles to this file, and also import other style files */
+/* Estilos globales de ReUse Campus */
+
+:root {
+  --verde: #2e7d32;
+  --verde-oscuro: #1b5e20;
+  --verde-claro: #e8f5e9;
+  --azul-claro: #e3f2fd;
+  --rojo: #c62828;
+  --rojo-claro: #ffebee;
+  --texto: #1f2933;
+  --texto-suave: #5f6b7a;
+  --borde: #dfe3e8;
+  --fondo: #f6f8f7;
+  --blanco: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--texto);
+  background: var(--fondo);
+  line-height: 1.5;
+}
+
+h1, h2, h3 { line-height: 1.2; }
+a { color: var(--verde); }
+
+/* Barra de navegación */
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 24px;
+  background: var(--verde);
+}
+.navbar a { color: var(--blanco); text-decoration: none; }
+.navbar .marca { font-weight: 700; font-size: 1.2rem; }
+.navbar nav { display: flex; flex-wrap: wrap; gap: 4px; }
+.navbar nav a { padding: 6px 12px; border-radius: 6px; }
+.navbar nav a:hover, .navbar nav a.activo { background: var(--verde-oscuro); }
+
+/* Contenedor principal y pie */
+.contenedor { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+.pie { text-align: center; padding: 16px; color: var(--texto-suave); font-size: 0.9rem; }
+
+/* Botones */
+.boton {
+  display: inline-block;
+  padding: 9px 16px;
+  border: 1px solid var(--verde);
+  border-radius: 6px;
+  background: var(--verde);
+  color: var(--blanco);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.boton:hover { background: var(--verde-oscuro); }
+.boton:disabled { opacity: 0.6; cursor: not-allowed; }
+.boton.secundario { background: var(--blanco); color: var(--verde); }
+.boton.secundario:hover { background: var(--verde-claro); }
+.boton.peligro { background: var(--rojo); border-color: var(--rojo); }
+
+/* Tarjetas y grillas */
+.tarjeta {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: 20px;
+}
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.publicacion { display: flex; flex-direction: column; gap: 8px; }
+.publicacion h3 { margin: 0; }
+.publicacion .boton { margin-top: auto; align-self: flex-start; }
+.descripcion {
+  margin: 0;
+  color: var(--texto-suave);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.meta { margin: 0; font-size: 0.85rem; color: var(--texto-suave); }
+
+/* Etiquetas */
+.etiquetas { display: flex; flex-wrap: wrap; gap: 6px; }
+.etiqueta {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--azul-claro);
+  font-size: 0.8rem;
+}
+.etiqueta.donacion { background: var(--verde-claro); }
+.etiqueta.estado { background: #fff3e0; }
+
+/* Pantalla de inicio */
+.hero { text-align: center; padding: 32px 0; }
+.hero p { max-width: 640px; margin: 0 auto 20px; color: var(--texto-suave); }
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
+.detalle .acciones { justify-content: flex-start; }
+.pasos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+
+/* Encabezados con acción */
+.encabezado { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.volver { display: inline-block; margin-bottom: 12px; }
+
+/* Formularios */
+.filtros { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin: 16px 0 24px; }
+.formulario { display: flex; flex-direction: column; gap: 10px; max-width: 640px; }
+.fila { display: flex; flex-wrap: wrap; gap: 12px; }
+.fila label { flex: 1 1 200px; }
+label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; font-size: 0.9rem; }
+input, select, textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 400;
+  background: var(--blanco);
+}
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--verde); border-color: var(--verde); }
+input.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched, select.ng-invalid.ng-touched { border-color: var(--rojo); }
+.campo-error { color: var(--rojo); margin-top: -4px; }
+
+/* Mensajes */
+.info { color: var(--texto-suave); }
+.alerta { padding: 10px 14px; border-radius: 6px; }
+.alerta.error { background: var(--rojo-claro); color: var(--rojo); }

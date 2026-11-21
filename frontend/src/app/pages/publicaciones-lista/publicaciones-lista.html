@@ -1,0 +1,52 @@
+<div class="encabezado">
+  <h1>Publicaciones disponibles</h1>
+  <a routerLink="/publicaciones/nueva" class="boton">+ Publicar</a>
+</div>
+
+<form class="filtros" (ngSubmit)="cargar()">
+  <label>
+    Categoría
+    <select name="categoria" [(ngModel)]="categoria" (change)="cargar()">
+      <option value="">Todas</option>
+      @for (c of categorias; track c.valor) {
+        <option [value]="c.valor">{{ c.texto }}</option>
+      }
+    </select>
+  </label>
+
+  <label>
+    Modalidad
+    <select name="modalidad" [(ngModel)]="modalidad" (change)="cargar()">
+      <option value="">Todas</option>
+      @for (m of modalidades; track m.valor) {
+        <option [value]="m.valor">{{ m.texto }}</option>
+      }
+    </select>
+  </label>
+
+  <button type="button" class="boton secundario" (click)="limpiarFiltros()">Limpiar filtros</button>
+</form>
+
+@if (cargando()) {
+  <p class="info">Cargando publicaciones...</p>
+} @else if (error()) {
+  <p class="alerta error">{{ error() }}</p>
+  <button class="boton secundario" (click)="cargar()">Reintentar</button>
+} @else if (publicaciones().length === 0) {
+  <p class="info">No hay publicaciones disponibles con estos filtros.</p>
+} @else {
+  <div class="grilla">
+    @for (p of publicaciones(); track p.id) {
+      <article class="tarjeta publicacion">
+        <div class="etiquetas">
+          <span class="etiqueta">{{ textoCategoria(p.categoria) }}</span>
+          <span class="etiqueta" [class.donacion]="p.modalidad === 'DONACION'">{{ textoModalidad(p.modalidad) }}</span>
+        </div>
+        <h3>{{ p.titulo }}</h3>
+        <p class="descripcion">{{ p.descripcion }}</p>
+        <p class="meta">Publicado por {{ p.propietario }} · {{ p.fechaPublicacion.slice(0, 10) }}</p>
+        <a [routerLink]="['/publicaciones', p.id]" class="boton">Ver detalle</a>
+      </article>
+    }
+  </div>
+}

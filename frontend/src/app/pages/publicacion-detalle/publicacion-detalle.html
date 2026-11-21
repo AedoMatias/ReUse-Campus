@@ -1,0 +1,30 @@
+<a routerLink="/publicaciones" class="volver">← Volver a publicaciones</a>
+
+@if (cargando()) {
+  <p class="info">Cargando...</p>
+} @else if (publicacion(); as p) {
+  <article class="tarjeta detalle">
+    <div class="etiquetas">
+      <span class="etiqueta">{{ textoCategoria(p.categoria) }}</span>
+      <span class="etiqueta" [class.donacion]="p.modalidad === 'DONACION'">{{ textoModalidad(p.modalidad) }}</span>
+      <span class="etiqueta estado">{{ p.estado }}</span>
+    </div>
+
+    <h1>{{ p.titulo }}</h1>
+    <p>{{ p.descripcion }}</p>
+    <p class="meta">Publicado por <strong>{{ p.propietario }}</strong> el {{ p.fechaPublicacion.slice(0, 10) }}</p>
+
+    @if (error()) {
+      <p class="alerta error">{{ error() }}</p>
+    }
+
+    @if (p.estado === 'DISPONIBLE') {
+      <div class="acciones">
+        <a [routerLink]="['/publicaciones', p.id, 'editar']" class="boton secundario">Editar</a>
+        <button type="button" class="boton peligro" (click)="eliminar()">Eliminar</button>
+      </div>
+    }
+  </article>
+} @else {
+  <p class="alerta error">{{ error() }}</p>
+}
