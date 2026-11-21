@@ -25,6 +25,38 @@
       </div>
     }
   </article>
+
+  <!-- Solicitar el artículo -->
+  <section class="tarjeta detalle solicitar">
+    <h2>Solicitar este artículo</h2>
+
+    @if (esPropia()) {
+      <p class="info">Esta publicación es tuya: no puedes solicitarla.</p>
+    } @else if (p.estado !== 'DISPONIBLE') {
+      <p class="info">Esta publicación no está disponible para solicitudes ({{ p.estado }}).</p>
+    } @else {
+      <form class="formulario" [formGroup]="formSolicitud" (ngSubmit)="solicitar()" novalidate>
+        <label>
+          Mensaje para {{ p.propietario }} *
+          <textarea formControlName="mensaje" rows="3" placeholder="Cuéntale por qué te sirve o qué ofreces a cambio"></textarea>
+        </label>
+        @if (formSolicitud.controls.mensaje.invalid && formSolicitud.controls.mensaje.touched) {
+          <small class="campo-error">El mensaje debe tener entre 5 y 500 caracteres.</small>
+        }
+
+        @if (errorSolicitud()) {
+          <p class="alerta error">{{ errorSolicitud() }}</p>
+        }
+        @if (exitoSolicitud()) {
+          <p class="alerta exito">{{ exitoSolicitud() }}</p>
+        }
+
+        <button type="submit" class="boton" [disabled]="enviando()">
+          {{ enviando() ? 'Enviando...' : 'Enviar solicitud' }}
+        </button>
+      </form>
+    }
+  </section>
 } @else {
   <p class="alerta error">{{ error() }}</p>
 }

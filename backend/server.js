@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const { probarConexion } = require('./config/db');
 const publicacionesRoutes = require('./routes/publicaciones.routes');
+const solicitudesRoutes = require('./routes/solicitudes.routes');
 const { rutaNoEncontrada, manejarErrores } = require('./middlewares/manejoErrores');
 
 const app = express();
@@ -24,6 +25,7 @@ app.get('/api', (req, res) => {
 
 // Rutas de la API
 app.use('/api/publicaciones', publicacionesRoutes);
+app.use('/api/solicitudes', solicitudesRoutes);
 
 // Siempre al final: 404 y manejo centralizado de errores
 app.use(rutaNoEncontrada);

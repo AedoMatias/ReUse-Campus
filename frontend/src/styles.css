@@ -134,3 +134,20 @@ input.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched, select.ng-invalid.n
 .info { color: var(--texto-suave); }
 .alerta { padding: 10px 14px; border-radius: 6px; }
 .alerta.error { background: var(--rojo-claro); color: var(--rojo); }
+.alerta.exito { background: var(--verde-claro); color: var(--verde-oscuro); }
+
+/* Usuario de prueba (temporal hasta el login) */
+.usuario-prueba { flex-direction: row; align-items: center; gap: 8px; color: var(--blanco); font-weight: 400; }
+.usuario-prueba select { padding: 4px 8px; }
+
+/* Solicitudes */
+.solicitar { margin-top: 16px; }
+.solicitar h2 { margin-top: 0; }
+.lista { display: flex; flex-direction: column; gap: 12px; }
+.fila-solicitud { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+.fila-solicitud h3 { margin: 0 0 4px; }
+.fila-solicitud p { margin: 4px 0; }
+.lado { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.estado-pendiente { background: #fff3e0; }
+.estado-aceptada { background: var(--verde-claro); }
+.estado-rechazada, .estado-cancelada { background: #eceff1; }

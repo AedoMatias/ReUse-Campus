@@ -4,5 +4,16 @@
     <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
     <a routerLink="/publicaciones" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Publicaciones</a>
     <a routerLink="/publicaciones/nueva" routerLinkActive="activo">Publicar</a>
+    <a routerLink="/mis-solicitudes" routerLinkActive="activo">Mis solicitudes</a>
   </nav>
+
+  <!-- Temporal hasta el login (Tarea 5): permite probar la app como distintos usuarios -->
+  <label class="usuario-prueba">
+    Usuario de prueba
+    <select (change)="cambiarUsuario($event)">
+      @for (u of usuario.usuariosPrueba; track u.id) {
+        <option [value]="u.id" [selected]="u.id === usuario.id()">{{ u.nombre }}</option>
+      }
+    </select>
+  </label>
 </header>
