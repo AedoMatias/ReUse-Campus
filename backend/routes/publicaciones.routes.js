@@ -1,13 +1,17 @@
-// Rutas de publicaciones: conectan cada URL + método HTTP con su controlador.
+
 const { Router } = require('express');
 const controlador = require('../controllers/publicaciones.controller');
+const { verificarToken } = require('../middlewares/auth.middleware');
 
 const router = Router();
 
-router.get('/', controlador.listar);          // Listar (con filtros opcionales)
-router.get('/:id', controlador.obtener);      // Ver una
-router.post('/', controlador.crear);          // Crear
-router.put('/:id', controlador.actualizar);   // Editar
-router.delete('/:id', controlador.eliminar);  // Eliminar o dar de baja
+// Consultas públicas
+router.get('/', controlador.listar);
+router.get('/:id', controlador.obtener);
+
+// Operaciones que requieren iniciar sesión
+router.post('/', verificarToken, controlador.crear);
+router.put('/:id', verificarToken, controlador.actualizar);
+router.delete('/:id', verificarToken, controlador.eliminar);
 
 module.exports = router;

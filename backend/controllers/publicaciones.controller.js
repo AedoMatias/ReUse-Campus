@@ -104,8 +104,7 @@ async function obtener(req, res) {
 async function crear(req, res) {
   const cuerpo = req.body || {};
   const datos = validarPublicacion(cuerpo);
-  if (cuerpo.usuarioId === undefined) throw new AppError(400, 'Falta el usuarioId del dueño de la publicación');
-  const usuarioId = obtenerId(cuerpo.usuarioId);
+  const usuarioId = req.usuario.id;
 
   // Regla: el dueño debe existir y estar ACTIVO
   const [usuarios] = await pool.query('SELECT estado FROM usuario WHERE id = ?', [usuarioId]);
@@ -133,6 +132,10 @@ async function actualizar(req, res) {
 
   // Regla: solo se puede editar mientras está DISPONIBLE
   const actual = await buscarPublicacion(id);
+    // Solo el propietario puede editar su publicación
+if (actual.usuarioId !== req.usuario.id) {
+  throw new AppError(403, 'Solo puedes editar tus propias publicaciones');
+}
   if (actual.estado !== 'DISPONIBLE') {
     throw new AppError(409, `No se puede editar una publicación en estado ${actual.estado}`);
   }
@@ -154,14 +157,21 @@ async function eliminar(req, res) {
     await conexion.beginTransaction();
 
     // FOR UPDATE bloquea la fila mientras decidimos, para evitar cambios simultáneos
-    const [filas] = await conexion.query('SELECT estado FROM publicacion WHERE id = ? FOR UPDATE', [id]);
-    if (filas.length === 0) throw new AppError(404, 'Publicación no encontrada');
-    const { estado } = filas[0];
+  const [filas] = await conexion.query(
+  'SELECT estado, usuarioId FROM publicacion WHERE id = ? FOR UPDATE',
+  [id]
+);
 
-    // Regla: no se elimina algo que ya está comprometido o entregado
-    if (estado === 'RESERVADA' || estado === 'ENTREGADA') {
-      throw new AppError(409, `No se puede eliminar una publicación ${estado}`);
-    }
+if (filas.length === 0) {
+  throw new AppError(404, 'Publicación no encontrada');
+}
+
+const { estado, usuarioId } = filas[0];
+
+// Solo el propietario puede eliminar su publicación
+if (usuarioId !== req.usuario.id) {
+  throw new AppError(403, 'Solo puedes eliminar tus propias publicaciones');
+}
 
     const [[{ total }]] = await conexion.query(
       `SELECT (SELECT COUNT(*) FROM solicitud WHERE publicacionId = ?) +
