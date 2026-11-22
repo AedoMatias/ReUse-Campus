@@ -1,12 +1,16 @@
-// Rutas de solicitudes de artículos
+
 const { Router } = require('express');
 const controlador = require('../controllers/solicitudes.controller');
+const { verificarToken } = require('../middlewares/auth.middleware');
 
 const router = Router();
 
-router.get('/', controlador.listar);                 // Listar (filtros: solicitanteId, publicacionId, estado)
-router.get('/:id', controlador.obtener);             // Ver una
-router.post('/', controlador.crear);                 // Solicitar un artículo
-router.patch('/:id/cancelar', controlador.cancelar); // Cancelar una solicitud pendiente
+// Todas las operaciones de solicitudes requieren autenticación
+router.use(verificarToken);
+
+router.get('/', controlador.listar);
+router.get('/:id', controlador.obtener);
+router.post('/', controlador.crear);
+router.patch('/:id/cancelar', controlador.cancelar);
 
 module.exports = router;

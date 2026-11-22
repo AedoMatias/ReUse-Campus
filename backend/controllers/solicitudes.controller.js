@@ -25,9 +25,9 @@ function obtenerId(valor, campo = 'id') {
 // IMPORTANTE (Tarea 5): cuando exista el login, el usuario que hace la petición
 // debe salir del token (req.usuario.id) y no del cuerpo. Solo hay que cambiar esta función.
 function usuarioActual(req) {
-  const valor = req.body?.solicitanteId ?? req.query.solicitanteId;
-  if (valor === undefined) throw new AppError(400, 'Falta el solicitanteId');
-  return obtenerId(valor, 'solicitanteId');
+  function usuarioActual(req) {
+  return req.usuario.id;
+}
 }
 
 async function buscarSolicitud(id, conexion = pool) {
@@ -41,6 +41,14 @@ async function listar(req, res) {
   const { solicitanteId, publicacionId, estado } = req.query;
   const condiciones = [];
   const valores = [];
+  // Un usuario normal solo puede consultar sus solicitudes
+// o las solicitudes recibidas en sus propias publicaciones.
+if (req.usuario.rol !== 'ADMINISTRADOR') {
+  condiciones.push(
+    '(s.solicitanteId = ? OR p.usuarioId = ?)'
+  );
+  valores.push(req.usuario.id, req.usuario.id);
+}
 
   if (solicitanteId) {
     condiciones.push('s.solicitanteId = ?');
@@ -62,8 +70,23 @@ async function listar(req, res) {
 }
 
 // GET /api/solicitudes/:id
+
 async function obtener(req, res) {
-  res.json(await buscarSolicitud(obtenerId(req.params.id)));
+  const id = obtenerId(req.params.id);
+  const solicitud = await buscarSolicitud(id);
+
+  const esSolicitante = solicitud.solicitanteId === req.usuario.id;
+  const esPropietario = solicitud.propietarioId === req.usuario.id;
+  const esAdministrador = req.usuario.rol === 'ADMINISTRADOR';
+
+  if (!esSolicitante && !esPropietario && !esAdministrador) {
+    throw new AppError(
+      403,
+      'No tienes permiso para consultar esta solicitud'
+    );
+  }
+
+  res.json(solicitud);
 }
 
 // POST /api/solicitudes  { publicacionId, solicitanteId, mensaje }

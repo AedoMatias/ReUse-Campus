@@ -1,0 +1,50 @@
+
+.login-contenedor {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.login-tarjeta {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: white;
+}
+
+.login-tarjeta h1 {
+  margin-bottom: 12px;
+}
+
+.login-tarjeta form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.login-tarjeta input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.login-tarjeta button {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #237a48;
+  color: white;
+  cursor: pointer;
+}
+
+.login-tarjeta button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mensaje-error {
+  color: #b42318;
+}
