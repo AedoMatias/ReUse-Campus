@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: 'publicaciones/nueva', component: PublicacionForm, title: 'Publicar | ReUse Campus' },
   { path: 'publicaciones/:id', component: PublicacionDetalle, title: 'Detalle | ReUse Campus' },
   { path: 'publicaciones/:id/editar', component: PublicacionForm, title: 'Editar | ReUse Campus' },
-  { path: 'mis-solicitudes', component: MisSolicitudes, title: 'Mis solicitudes | ReUse Campus' },
+  { path: 'mis-solicitudes', component: MisSolicitudes, canActivate: [authGuard], title: 'Mis solicitudes | ReUse Campus' },
   { path: 'login',component: Login,title: 'Iniciar sesión | ReUse Campus'},
   { path: '**', component: NoEncontrada, title: 'No encontrada | ReUse Campus' },
   {
@@ -30,11 +30,5 @@ export const routes: Routes = [
   component: PublicacionForm,
   canActivate: [authGuard],
   title: 'Editar | ReUse Campus'
-},
-{
-  path: 'mis-solicitudes',
-  component: MisSolicitudes,
-  canActivate: [authGuard],
-  title: 'Mis solicitudes | ReUse Campus'
 },
 ];

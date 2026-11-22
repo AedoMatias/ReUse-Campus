@@ -21,26 +21,53 @@
 
 @if (cargando()) {
   <p class="info">Cargando solicitudes...</p>
-} @else if (solicitudes().length === 0) {
-  <p class="info">No tienes solicitudes{{ estado ? ' en estado ' + estado : '' }}.
-    <a routerLink="/publicaciones">Ver publicaciones disponibles</a>
-  </p>
 } @else {
-  <div class="lista">
-    @for (s of solicitudes(); track s.id) {
-      <article class="tarjeta fila-solicitud">
-        <div>
-          <h3><a [routerLink]="['/publicaciones', s.publicacionId]">{{ s.publicacionTitulo }}</a></h3>
-          <p class="meta">Dueño: {{ s.propietario }} · Enviada el {{ s.fechaSolicitud.slice(0, 10) }}</p>
-          <p>"{{ s.mensaje }}"</p>
-        </div>
-        <div class="lado">
-          <span class="etiqueta estado-{{ s.estado.toLowerCase() }}">{{ s.estado }}</span>
-          @if (s.estado === 'PENDIENTE') {
-            <button type="button" class="boton peligro" (click)="cancelar(s)">Cancelar</button>
-          }
-        </div>
-      </article>
-    }
-  </div>
+  <h2>Enviadas</h2>
+  @if (enviadas().length === 0) {
+    <p class="info">No tienes solicitudes{{ estado ? ' en estado ' + estado : '' }}.
+      <a routerLink="/publicaciones">Ver publicaciones disponibles</a>
+    </p>
+  } @else {
+    <div class="lista">
+      @for (s of enviadas(); track s.id) {
+        <article class="tarjeta fila-solicitud">
+          <div>
+            <h3><a [routerLink]="['/publicaciones', s.publicacionId]">{{ s.publicacionTitulo }}</a></h3>
+            <p class="meta">Dueño: {{ s.propietario }} · Enviada el {{ s.fechaSolicitud.slice(0, 10) }}</p>
+            <p>"{{ s.mensaje }}"</p>
+          </div>
+          <div class="lado">
+            <span class="etiqueta estado-{{ s.estado.toLowerCase() }}">{{ s.estado }}</span>
+            @if (s.estado === 'PENDIENTE') {
+              <button type="button" class="boton peligro" (click)="cancelar(s)">Cancelar</button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  <h2>Recibidas</h2>
+  @if (recibidas().length === 0) {
+    <p class="info">No tienes solicitudes recibidas{{ estado ? ' en estado ' + estado : '' }}.</p>
+  } @else {
+    <div class="lista">
+      @for (s of recibidas(); track s.id) {
+        <article class="tarjeta fila-solicitud">
+          <div>
+            <h3><a [routerLink]="['/publicaciones', s.publicacionId]">{{ s.publicacionTitulo }}</a></h3>
+            <p class="meta">Solicitante: {{ s.solicitante }} · Publicación: {{ s.publicacionEstado }}</p>
+            <p>"{{ s.mensaje }}"</p>
+          </div>
+          <div class="lado">
+            <span class="etiqueta estado-{{ s.estado.toLowerCase() }}">{{ s.estado }}</span>
+            @if (s.estado === 'PENDIENTE' && s.publicacionEstado === 'DISPONIBLE') {
+              <button type="button" class="boton" [disabled]="procesando()" (click)="resolver(s, 'aceptar')">Aceptar</button>
+              <button type="button" class="boton peligro" [disabled]="procesando()" (click)="resolver(s, 'rechazar')">Rechazar</button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
 }
