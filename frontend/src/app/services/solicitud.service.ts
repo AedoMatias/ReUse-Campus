@@ -24,6 +24,10 @@ export class SolicitudService {
     return this.http.post<Solicitud>(this.url, datos);
   }
 
+  resolver(id: number, accion: 'aceptar' | 'rechazar'): Observable<Solicitud> {
+    return this.http.patch<Solicitud>(`${this.url}/${id}/${accion}`, {});
+  }
+
   // PATCH /api/solicitudes/:id/cancelar
   cancelar(id: number, solicitanteId: number): Observable<Solicitud> {
     return this.http.patch<Solicitud>(`${this.url}/${id}/cancelar`, { solicitanteId });

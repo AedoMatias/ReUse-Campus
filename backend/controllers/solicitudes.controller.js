@@ -22,14 +22,6 @@ function obtenerId(valor, campo = 'id') {
   return id;
 }
 
-// IMPORTANTE (Tarea 5): cuando exista el login, el usuario que hace la petición
-// debe salir del token (req.usuario.id) y no del cuerpo. Solo hay que cambiar esta función.
-function usuarioActual(req) {
-  function usuarioActual(req) {
-  return req.usuario.id;
-}
-}
-
 async function buscarSolicitud(id, conexion = pool) {
   const [filas] = await conexion.query(`${SELECT_SOLICITUD} WHERE s.id = ?`, [id]);
   if (filas.length === 0) throw new AppError(404, 'Solicitud no encontrada');
@@ -89,7 +81,7 @@ async function obtener(req, res) {
   res.json(solicitud);
 }
 
-// POST /api/solicitudes  { publicacionId, solicitanteId, mensaje }
+// POST /api/solicitudes  { publicacionId, mensaje }
 async function crear(req, res) {
   const cuerpo = req.body || {};
 
@@ -101,7 +93,7 @@ async function crear(req, res) {
   if (errores.length) throw new AppError(400, 'Datos inválidos', errores);
 
   const publicacionId = obtenerId(cuerpo.publicacionId, 'publicacionId');
-  const solicitanteId = usuarioActual(req);
+  const solicitanteId = req.usuario.id;
 
   // 2. Transacción: las comprobaciones y el INSERT se hacen como una sola operación.
   //    FOR UPDATE bloquea la publicación para que dos solicitudes simultáneas
@@ -155,10 +147,10 @@ async function crear(req, res) {
   }
 }
 
-// PATCH /api/solicitudes/:id/cancelar  { solicitanteId }
+// PATCH /api/solicitudes/:id/cancelar
 async function cancelar(req, res) {
   const id = obtenerId(req.params.id);
-  const solicitanteId = usuarioActual(req);
+  const solicitanteId = req.usuario.id;
 
   const solicitud = await buscarSolicitud(id);
 
@@ -180,4 +172,78 @@ async function cancelar(req, res) {
   res.json(await buscarSolicitud(id));
 }
 
-module.exports = { listar, obtener, crear, cancelar };
+async function resolver(req, res, nuevoEstado) {
+  const id = obtenerId(req.params.id);
+  const conexion = await pool.getConnection();
+  let respuesta;
+  try {
+    await conexion.beginTransaction();
+    const [[referencia]] = await conexion.query(
+      'SELECT publicacionId FROM solicitud WHERE id = ?', [id]
+    );
+    if (!referencia) throw new AppError(404, 'Solicitud no encontrada');
+    const { publicacionId } = referencia;
+
+    // Bloquear primero la publicación, igual que al crear solicitudes o darla de baja.
+    const [[publicacion]] = await conexion.query(
+      'SELECT usuarioId, estado FROM publicacion WHERE id = ? FOR UPDATE', [publicacionId]
+    );
+    if (!publicacion) throw new AppError(404, 'Publicación no encontrada');
+    if (publicacion.usuarioId !== req.usuario.id) {
+      throw new AppError(403, 'Solo el propietario puede gestionar esta solicitud');
+    }
+
+    const [[solicitud]] = await conexion.query(
+      'SELECT solicitanteId, estado FROM solicitud WHERE id = ? AND publicacionId = ? FOR UPDATE',
+      [id, publicacionId]
+    );
+    if (!solicitud) throw new AppError(404, 'Solicitud no encontrada');
+    if (solicitud.estado !== 'PENDIENTE') {
+      throw new AppError(409, 'La solicitud ya fue procesada');
+    }
+    if (publicacion.estado !== 'DISPONIBLE') {
+      throw new AppError(409, 'La publicación no está disponible');
+    }
+
+    if (nuevoEstado === 'ACEPTADA') {
+      const [[aceptada]] = await conexion.query(
+        "SELECT id FROM solicitud WHERE publicacionId = ? AND estado = 'ACEPTADA' LIMIT 1 FOR UPDATE",
+        [publicacionId]
+      );
+      if (aceptada) throw new AppError(409, 'La publicación ya tiene una solicitud aceptada');
+    }
+
+    await conexion.query('UPDATE solicitud SET estado = ? WHERE id = ?', [nuevoEstado, id]);
+    if (nuevoEstado === 'ACEPTADA') {
+      await conexion.query("UPDATE publicacion SET estado = 'RESERVADA' WHERE id = ?", [publicacionId]);
+      await conexion.query(
+        "UPDATE solicitud SET estado = 'RECHAZADA' WHERE publicacionId = ? AND estado = 'PENDIENTE'",
+        [publicacionId]
+      );
+      await conexion.query(
+        `INSERT INTO entrega (publicacionId, solicitudId, propietarioId, receptorId, estado)
+         VALUES (?, ?, ?, ?, 'PENDIENTE')`,
+        [publicacionId, id, publicacion.usuarioId, solicitud.solicitanteId]
+      );
+    }
+
+    respuesta = await buscarSolicitud(id, conexion);
+    await conexion.commit();
+  } catch (error) {
+    await conexion.rollback();
+    throw error;
+  } finally {
+    conexion.release();
+  }
+  res.json(respuesta);
+}
+
+function aceptar(req, res) {
+  return resolver(req, res, 'ACEPTADA');
+}
+
+function rechazar(req, res) {
+  return resolver(req, res, 'RECHAZADA');
+}
+
+module.exports = { listar, obtener, crear, cancelar, aceptar, rechazar };

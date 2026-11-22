@@ -12,5 +12,7 @@ router.get('/', controlador.listar);
 router.get('/:id', controlador.obtener);
 router.post('/', controlador.crear);
 router.patch('/:id/cancelar', controlador.cancelar);
+router.patch('/:id/aceptar', controlador.aceptar);
+router.patch('/:id/rechazar', controlador.rechazar);
 
 module.exports = router;
