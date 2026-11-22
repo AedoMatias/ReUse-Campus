@@ -13,22 +13,10 @@ import { authGuard } from './core/auth.guard';
 export const routes: Routes = [
   { path: '', component: Inicio, title: 'ReUse Campus' },
   { path: 'publicaciones', component: PublicacionesLista, title: 'Publicaciones | ReUse Campus' },
-  { path: 'publicaciones/nueva', component: PublicacionForm, title: 'Publicar | ReUse Campus' },
+  { path: 'publicaciones/nueva', component: PublicacionForm, canActivate: [authGuard], title: 'Publicar | ReUse Campus' },
+  { path: 'publicaciones/:id/editar', component: PublicacionForm, canActivate: [authGuard], title: 'Editar | ReUse Campus' },
   { path: 'publicaciones/:id', component: PublicacionDetalle, title: 'Detalle | ReUse Campus' },
-  { path: 'publicaciones/:id/editar', component: PublicacionForm, title: 'Editar | ReUse Campus' },
   { path: 'mis-solicitudes', component: MisSolicitudes, canActivate: [authGuard], title: 'Mis solicitudes | ReUse Campus' },
-  { path: 'login',component: Login,title: 'Iniciar sesión | ReUse Campus'},
+  { path: 'login', component: Login, title: 'Iniciar sesión | ReUse Campus' },
   { path: '**', component: NoEncontrada, title: 'No encontrada | ReUse Campus' },
-  {
-  path: 'publicaciones/nueva',
-  component: PublicacionForm,
-  canActivate: [authGuard],
-  title: 'Publicar | ReUse Campus'
-},
-{
-  path: 'publicaciones/:id/editar',
-  component: PublicacionForm,
-  canActivate: [authGuard],
-  title: 'Editar | ReUse Campus'
-},
 ];
