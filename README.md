@@ -62,10 +62,30 @@ La prueba de integración arranca Express en un puerto temporal y usa la configu
 3. Entra como `carla@reusecampus.cl` y envía otra solicitud al mismo artículo.
 4. Vuelve a la cuenta de Ana. En **Mis solicitudes → Recibidas**, acepta una de las dos pendientes. Verifica que la seleccionada quede `ACEPTADA`, la otra `RECHAZADA` y la publicación `RESERVADA`.
 5. En otra publicación, rechaza una solicitud individual y verifica que la publicación siga `DISPONIBLE`. Tras cerrar sesión, comprueba que abrir `/publicaciones/nueva`, `/publicaciones/:id/editar` o `/mis-solicitudes` redirige al login.
-
 6. Al aceptar una solicitud se crea una entrega `PENDIENTE`. Como Ana o como el solicitante aceptado, abre **Mis entregas** y pulsa **Confirmar entrega**. Verifica que la entrega pase al **Historial** como `COMPLETADA`, con su fecha, y que la publicación quede `ENTREGADA`. Un usuario que no participa no puede ver ni confirmar la entrega, y una entrega ya confirmada no se puede confirmar de nuevo.
 7. Inicia sesión como `admin@reusecampus.cl` y abre **Administración**. Revisa las estadísticas y bloquea a un usuario. Verifica que esa cuenta ya no pueda iniciar sesión y vuelve a activarla. Oculta una publicación disponible y comprueba que desaparezca del listado público y que sus solicitudes pendientes queden `RECHAZADA`. Un usuario normal que abre `/admin` vuelve al inicio.
 
+## Declaración de uso de inteligencia artificial
+
+En el desarrollo de este proyecto usamos herramientas de inteligencia artificial como apoyo. Cada integrante declara la herramienta que usó y en qué la usó.
+
+| Integrante | Herramienta | Tareas |
+| --- | --- | --- |
+| Vasco Zambrano | Claude Code (Anthropic) | 2, 3, 4, 6, 8 y 9 |
+| Matías Aedo | ChatGPT (OpenAI) | 1, 5, 7 y 10 |
+
+**Vasco Zambrano: Claude Code.** Lo usó para:
+- Planificar las 10 tareas del proyecto y redactar sus Issues en GitHub.
+- Generar el script de la base de datos MySQL, con sus tablas, relaciones, restricciones y datos de prueba (Tarea 2).
+- Programar la API Express de publicaciones, solicitudes, entregas y administración, con sus validaciones y transacciones (Tareas 3, 6, 8 y 9).
+- Crear los componentes, servicios, rutas y estilos de Angular (Tareas 4, 6, 8 y 9).
+- Escribir y ejecutar las pruebas de cada tarea contra una base de datos temporal.
+- Preparar los commits, los Pull Requests y la documentación de las rutas en este README.
+
+**Matías Aedo: ChatGPT.** Lo usó como apoyo para la estructura inicial del proyecto, la autenticación con JWT y los roles, la aceptación y el rechazo de solicitudes, y las pruebas y la documentación (Tareas 1, 5, 7 y 10).
+
+**Revisión humana:** la IA no reemplazó nuestro trabajo. Definimos los requisitos y las reglas de negocio, decidimos cómo dividir las tareas, y revisamos y probamos el código generado antes de cada commit. Cada integrante es responsable de las tareas que subió y puede explicar su funcionamiento.
+
 ## Autores
-- Matias Aedo
+- Matías Aedo
 - Vasco Zambrano
