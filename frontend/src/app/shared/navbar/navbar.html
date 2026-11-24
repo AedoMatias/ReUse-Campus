@@ -25,6 +25,12 @@
       <a routerLink="/entregas" routerLinkActive="activo">
         Mis entregas
       </a>
+
+      @if (auth.esAdministrador()) {
+        <a routerLink="/admin" routerLinkActive="activo">
+          Administración
+        </a>
+      }
     }
   </nav>
 

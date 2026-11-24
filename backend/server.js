@@ -8,6 +8,7 @@ const publicacionesRoutes = require('./routes/publicaciones.routes');
 const solicitudesRoutes = require('./routes/solicitudes.routes');
 const authRoutes = require('./routes/auth.routes');
 const entregasRoutes = require('./routes/entregas.routes');
+const adminRoutes = require('./routes/admin.routes');
 const { rutaNoEncontrada, manejarErrores } = require('./middlewares/manejoErrores');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api/publicaciones', publicacionesRoutes);
 app.use('/api/solicitudes', solicitudesRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/entregas', entregasRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Siempre al final: 404 y manejo centralizado de errores
 app.use(rutaNoEncontrada);

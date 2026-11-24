@@ -40,13 +40,16 @@ La base de las rutas es `/api`. Las operaciones protegidas reciben el token devu
 | `PATCH /solicitudes/:id/aceptar`, `PATCH /solicitudes/:id/rechazar` | Propietario de la publicación |
 | `GET /entregas`, `GET /entregas/:id` | Propietario o receptor de la entrega; el administrador ve todas |
 | `PATCH /entregas/:id/confirmar` | Propietario o receptor, solo si la entrega está `PENDIENTE` |
+| `GET /admin/estadisticas`, `GET /admin/usuarios`, `GET /admin/publicaciones` | Administrador |
+| `PATCH /admin/usuarios/:id/estado` | Administrador, excepto sobre sí mismo u otro administrador |
+| `PATCH /admin/publicaciones/:id/ocultar`, `DELETE /admin/publicaciones/:id` | Administrador. Solo se ocultan publicaciones `DISPONIBLE` y solo se eliminan las que no tienen solicitudes |
 
 ## Pruebas
 
 | Comando | Directorio | Cobertura |
 | --- | --- | --- |
 | `npm run build` | `frontend` | Compilación de producción |
-| `npm test -- --watch=false` | `frontend` | Navegación, guard, interceptor y aceptación en Angular con HTTP simulado |
+| `npm test -- --watch=false` | `frontend` | Navegación, guards de sesión y de administrador, interceptor y aceptación en Angular con HTTP simulado |
 | `node --test tests/solicitudes.integration.test.js` | `backend` | API con MySQL, permisos, estados, concurrencia y reversión |
 | `git diff --check` | Raíz | Errores de espacios en el diff |
 
@@ -61,6 +64,7 @@ La prueba de integración arranca Express en un puerto temporal y usa la configu
 5. En otra publicación, rechaza una solicitud individual y verifica que la publicación siga `DISPONIBLE`. Tras cerrar sesión, comprueba que abrir `/publicaciones/nueva`, `/publicaciones/:id/editar` o `/mis-solicitudes` redirige al login.
 
 6. Al aceptar una solicitud se crea una entrega `PENDIENTE`. Como Ana o como el solicitante aceptado, abre **Mis entregas** y pulsa **Confirmar entrega**. Verifica que la entrega pase al **Historial** como `COMPLETADA`, con su fecha, y que la publicación quede `ENTREGADA`. Un usuario que no participa no puede ver ni confirmar la entrega, y una entrega ya confirmada no se puede confirmar de nuevo.
+7. Inicia sesión como `admin@reusecampus.cl` y abre **Administración**. Revisa las estadísticas y bloquea a un usuario. Verifica que esa cuenta ya no pueda iniciar sesión y vuelve a activarla. Oculta una publicación disponible y comprueba que desaparezca del listado público y que sus solicitudes pendientes queden `RECHAZADA`. Un usuario normal que abre `/admin` vuelve al inicio.
 
 ## Autores
 - Matias Aedo

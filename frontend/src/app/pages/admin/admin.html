@@ -1,0 +1,86 @@
+<h1>Panel de administrador</h1>
+
+@if (mensaje()) {
+  <p class="alerta exito">{{ mensaje() }}</p>
+}
+@if (error()) {
+  <p class="alerta error">{{ error() }}</p>
+}
+
+@if (cargando()) {
+  <p class="info">Cargando panel...</p>
+} @else {
+  <!-- Estadísticas -->
+  @if (estadisticas(); as e) {
+    <div class="estadisticas">
+      @for (g of grupos; track g.clave) {
+        <article class="tarjeta">
+          <h3>{{ g.titulo }}</h3>
+          <p class="numero">{{ e[g.clave]['total'] }}</p>
+          <ul>
+            @for (d of detalle(g.clave); track d[0]) {
+              <li>{{ d[0] }}: {{ d[1] }}</li>
+            }
+          </ul>
+        </article>
+      }
+    </div>
+  }
+
+  <!-- Usuarios -->
+  <h2>Usuarios</h2>
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead>
+        <tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Publicaciones</th><th>Estado</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (u of usuarios(); track u.id) {
+          <tr>
+            <td>{{ u.nombre }}</td>
+            <td>{{ u.correo }}</td>
+            <td>{{ u.rol }}</td>
+            <td>{{ u.publicaciones }}</td>
+            <td><span class="etiqueta estado-{{ u.estado.toLowerCase() }}">{{ u.estado }}</span></td>
+            <td>
+              @if (u.rol !== 'ADMINISTRADOR' && u.id !== auth.usuario()?.id) {
+                <button type="button" class="boton" [class.peligro]="u.estado === 'ACTIVO'"
+                        [disabled]="procesando()" (click)="cambiarEstado(u)">
+                  {{ u.estado === 'ACTIVO' ? 'Bloquear' : 'Activar' }}
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Moderación de publicaciones -->
+  <h2>Publicaciones</h2>
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead>
+        <tr><th>Título</th><th>Propietario</th><th>Solicitudes</th><th>Estado</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (p of publicaciones(); track p.id) {
+          <tr>
+            <td><a [routerLink]="['/publicaciones', p.id]">{{ p.titulo }}</a></td>
+            <td>{{ p.propietario }}</td>
+            <td>{{ p.solicitudes }}</td>
+            <td><span class="etiqueta estado-{{ p.estado.toLowerCase() }}">{{ p.estado }}</span></td>
+            <td class="acciones-tabla">
+              @if (p.estado === 'DISPONIBLE') {
+                <button type="button" class="boton secundario" [disabled]="procesando()" (click)="ocultar(p)">Ocultar</button>
+              }
+              @if (p.solicitudes === 0) {
+                <button type="button" class="boton peligro" [disabled]="procesando()" (click)="eliminar(p)">Eliminar</button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

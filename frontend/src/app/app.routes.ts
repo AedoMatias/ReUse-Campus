@@ -8,6 +8,8 @@ import { MisSolicitudes } from './pages/mis-solicitudes/mis-solicitudes';
 import { Login } from './pages/login/login';
 import { authGuard } from './core/auth.guard';
 import { Entregas } from './pages/entregas/entregas';
+import { Admin } from './pages/admin/admin';
+import { adminGuard } from './core/admin.guard';
 
 // Rutas de navegación: cada URL muestra un componente.
 // El orden importa: 'publicaciones/nueva' va antes que 'publicaciones/:id'.
@@ -19,6 +21,7 @@ export const routes: Routes = [
   { path: 'publicaciones/:id', component: PublicacionDetalle, title: 'Detalle | ReUse Campus' },
   { path: 'mis-solicitudes', component: MisSolicitudes, canActivate: [authGuard], title: 'Mis solicitudes | ReUse Campus' },
   { path: 'entregas', component: Entregas, canActivate: [authGuard], title: 'Mis entregas | ReUse Campus' },
+  { path: 'admin', component: Admin, canActivate: [adminGuard], title: 'Administración | ReUse Campus' },
   { path: 'login', component: Login, title: 'Iniciar sesión | ReUse Campus' },
   { path: '**', component: NoEncontrada, title: 'No encontrada | ReUse Campus' },
 ];

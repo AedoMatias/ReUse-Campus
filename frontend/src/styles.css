@@ -152,3 +152,19 @@ input.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched, select.ng-invalid.n
 .estado-aceptada { background: var(--verde-claro); }
 .estado-rechazada, .estado-cancelada { background: #eceff1; }
 .estado-completada { background: var(--verde-claro); }
+
+/* Panel de administrador */
+.estadisticas { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.estadisticas h3 { margin: 0; }
+.estadisticas .numero { font-size: 2rem; font-weight: 700; margin: 4px 0; color: var(--verde); }
+.estadisticas ul { margin: 0; padding-left: 18px; color: var(--texto-suave); font-size: 0.85rem; }
+.tabla-contenedor { overflow-x: auto; background: var(--blanco); border: 1px solid var(--borde); border-radius: 10px; }
+.tabla { width: 100%; border-collapse: collapse; }
+.tabla th, .tabla td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--borde); white-space: nowrap; }
+.tabla th { background: var(--fondo); font-size: 0.85rem; }
+.tabla tr:last-child td { border-bottom: none; }
+.acciones-tabla { display: flex; gap: 6px; }
+.estado-activo, .estado-disponible { background: var(--verde-claro); }
+.estado-bloqueado { background: var(--rojo-claro); }
+.estado-reservada { background: #fff3e0; }
+.estado-entregada { background: var(--azul-claro); }
