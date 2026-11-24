@@ -151,3 +151,4 @@ input.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched, select.ng-invalid.n
 .estado-pendiente { background: #fff3e0; }
 .estado-aceptada { background: var(--verde-claro); }
 .estado-rechazada, .estado-cancelada { background: #eceff1; }
+.estado-completada { background: var(--verde-claro); }

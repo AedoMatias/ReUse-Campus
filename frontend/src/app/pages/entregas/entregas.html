@@ -1,0 +1,57 @@
+<h1>Mis entregas</h1>
+
+@if (mensaje()) {
+  <p class="alerta exito">{{ mensaje() }}</p>
+}
+@if (error()) {
+  <p class="alerta error">{{ error() }}</p>
+}
+
+@if (cargando()) {
+  <p class="info">Cargando entregas...</p>
+} @else {
+  <h2>Pendientes de entrega</h2>
+  @if (pendientes().length === 0) {
+    <p class="info">No tienes entregas pendientes. Se crean al aceptar una solicitud.</p>
+  } @else {
+    <div class="lista">
+      @for (e of pendientes(); track e.id) {
+        <article class="tarjeta fila-solicitud">
+          <div>
+            <h3><a [routerLink]="['/publicaciones', e.publicacionId]">{{ e.publicacionTitulo }}</a></h3>
+            <p class="meta">{{ rol(e) }} · Acordada el {{ e.fechaAcuerdo.slice(0, 10) }}</p>
+          </div>
+          <div class="lado">
+            <span class="etiqueta estado-pendiente">PENDIENTE</span>
+            <button type="button" class="boton" [disabled]="procesando()" (click)="confirmar(e)">
+              Confirmar entrega
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  <h2>Historial</h2>
+  @if (historial().length === 0) {
+    <p class="info">Aún no tienes entregas completadas.</p>
+  } @else {
+    <div class="lista">
+      @for (e of historial(); track e.id) {
+        <article class="tarjeta fila-solicitud">
+          <div>
+            <h3><a [routerLink]="['/publicaciones', e.publicacionId]">{{ e.publicacionTitulo }}</a></h3>
+            <p class="meta">
+              {{ rol(e) }} ·
+              @if (e.fechaEntrega) { Entregada el {{ e.fechaEntrega.slice(0, 10) }} }
+              @else { Acordada el {{ e.fechaAcuerdo.slice(0, 10) }} }
+            </p>
+          </div>
+          <div class="lado">
+            <span class="etiqueta estado-{{ e.estado.toLowerCase() }}">{{ e.estado }}</span>
+          </div>
+        </article>
+      }
+    </div>
+  }
+}

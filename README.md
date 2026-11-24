@@ -38,6 +38,8 @@ La base de las rutas es `/api`. Las operaciones protegidas reciben el token devu
 | `POST /solicitudes` | Sesión activa y publicación disponible de otro usuario |
 | `PATCH /solicitudes/:id/cancelar` | Solicitante |
 | `PATCH /solicitudes/:id/aceptar`, `PATCH /solicitudes/:id/rechazar` | Propietario de la publicación |
+| `GET /entregas`, `GET /entregas/:id` | Propietario o receptor de la entrega; el administrador ve todas |
+| `PATCH /entregas/:id/confirmar` | Propietario o receptor, solo si la entrega está `PENDIENTE` |
 
 ## Pruebas
 
@@ -58,7 +60,7 @@ La prueba de integración arranca Express en un puerto temporal y usa la configu
 4. Vuelve a la cuenta de Ana. En **Mis solicitudes → Recibidas**, acepta una de las dos pendientes. Verifica que la seleccionada quede `ACEPTADA`, la otra `RECHAZADA` y la publicación `RESERVADA`.
 5. En otra publicación, rechaza una solicitud individual y verifica que la publicación siga `DISPONIBLE`. Tras cerrar sesión, comprueba que abrir `/publicaciones/nueva`, `/publicaciones/:id/editar` o `/mis-solicitudes` redirige al login.
 
-La reserva ya genera una entrega `PENDIENTE`. La confirmación de entrega y el historial se incorporarán con la Tarea 9. Su verificación queda pendiente de esa integración.
+6. Al aceptar una solicitud se crea una entrega `PENDIENTE`. Como Ana o como el solicitante aceptado, abre **Mis entregas** y pulsa **Confirmar entrega**. Verifica que la entrega pase al **Historial** como `COMPLETADA`, con su fecha, y que la publicación quede `ENTREGADA`. Un usuario que no participa no puede ver ni confirmar la entrega, y una entrega ya confirmada no se puede confirmar de nuevo.
 
 ## Autores
 - Matias Aedo
